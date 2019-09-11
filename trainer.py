@@ -22,7 +22,6 @@ from model.logistic_classifier import LogisticClassifier
 from build_imdb_dataset import VOCAB_SIZE
 from utils.data_loader import DataLoader
 from utils.ce_loss import CrossEntropyLoss
-from optimizer.gradient_decent import GradientDecent
 
 MAX_EPOCH = 300
 LEARNING_RATE = 0.1
@@ -33,7 +32,6 @@ with open('imdb_data.pkl', 'br') as f:
 
 model = LogisticClassifier(dim=VOCAB_SIZE)
 loss_criterion = CrossEntropyLoss()
-optimizer = GradientDecent(model.parameters(), lr=LEARNING_RATE)
 
 train_loader = DataLoader(X_train, y_train,  bs=BATCH_SIZE)
 val_loader = DataLoader(X_val, y_val, bs=BATCH_SIZE)

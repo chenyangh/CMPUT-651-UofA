@@ -33,7 +33,7 @@ class LogisticClassifier:
         y = np.asarray(y)
         y_pred = np.asarray(y_pred)
         # theta
-        gradient = np.zeros(self.paras['theta'].shape[0])
+        gradient = np.zeros(self.theta.shape[0])
         for x, delta in zip(X, y_pred - y):
             gradient += np.dot(x, delta)
         gradient /= len(y)
