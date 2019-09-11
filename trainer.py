@@ -25,7 +25,7 @@ from utils.ce_loss import CrossEntropyLoss
 from optimizer.gradient_decent import GradientDecent
 
 MAX_EPOCH = 300
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.1
 BATCH_SIZE = 20
 
 with open('imdb_data.pkl', 'br') as f:
@@ -35,7 +35,7 @@ model = LogisticClassifier(dim=VOCAB_SIZE)
 loss_criterion = CrossEntropyLoss()
 optimizer = GradientDecent(model.parameters(), lr=LEARNING_RATE)
 
-train_loader = DataLoader(X_train, y_train, bs=BATCH_SIZE)
+train_loader = DataLoader(X_train, y_train,  bs=BATCH_SIZE)
 val_loader = DataLoader(X_val, y_val, bs=BATCH_SIZE)
 test_loader = DataLoader(X_val, y_val, bs=BATCH_SIZE)
 
@@ -44,16 +44,15 @@ for epoch in range(MAX_EPOCH):
     train_loss = 0
     for X, y in train_loader:
         y_pred = model(X)
-        loss = loss_criterion(y, y_pred) / len(X)
-        print(loss)
-        optimizer.step(loss)
+        loss = loss_criterion(y, y_pred)
+        model.gradient_decent_step(X, y, y_pred)
         train_loss += loss
-    print(f'Training loss is {train_loss}')
+    print(f'Training loss is {train_loss/len(train_loader)}')
 
     val_loss = 0
     for X, y in val_loader:
         y_pred = model(X)
         loss = loss_criterion(y, y_pred)
         val_loss += loss
-    print(f'Validation loss is {val_loss}')
+    print(f'Validation loss is {val_loss/len(val_loader)}')
 
