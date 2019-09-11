@@ -147,4 +147,5 @@ def build_imdb_dataset_with_bow(is_str_clean=False, is_remove_stopwords=False):
         pkl.dump((id2word, word2id), f)
 
 
-build_imdb_dataset_with_bow()
+if __name__ == '__main__':
+    build_imdb_dataset_with_bow()
