@@ -30,7 +30,7 @@ aclImdb
 
 Best val loss at: 8 th epoch
 
-Test accuracy is: 0.844800
+Test accuracy is: 0.842000
 
 
 
