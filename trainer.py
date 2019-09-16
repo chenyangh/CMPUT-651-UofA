@@ -24,6 +24,7 @@ from utils.data_loader import DataLoader
 from utils.ce_loss import CrossEntropyLoss
 from copy import deepcopy
 import numpy as np
+from tqdm import tqdm
 
 MAX_EPOCH = 300
 LEARNING_RATE = 0.1
@@ -43,31 +44,34 @@ test_loader = DataLoader(X_val, y_val, bs=BATCH_SIZE)
 best_model = None
 best_val_loss = 9999
 train_val_loss_list = []
-for epoch in range(MAX_EPOCH):
+best_epoch_num = None
+for epoch in tqdm(range(MAX_EPOCH)):
     train_loss = 0
     for X, y in train_loader:
         y_pred = model(X)
         loss = loss_criterion(y, y_pred)
         model.gradient_decent_step(X, y, y_pred)
         train_loss += loss
-    print(f'Training loss is {train_loss/len(train_loader)}')
+    # print(f'Training loss is {train_loss/len(train_loader)}')
 
     val_loss = 0
     for X, y in val_loader:
         y_pred = model(X)
         loss = loss_criterion(y, y_pred)
         val_loss += loss
-    print(f'Validation loss is {val_loss/len(val_loader)}')
+    # print(f'Validation loss is {val_loss/len(val_loader)}')
 
     # for the training curve
     train_val_loss_list.append((train_loss/len(train_loader), val_loss/len(val_loader)))
 
     if val_loss < best_val_loss:
         best_val_loss = val_loss
+        best_epoch_num = epoch + 1
         if best_model is not None:  # collect garbage
             del best_model
         best_model = deepcopy(model)
 
+print(f'Best val loss at: {best_epoch_num:d} th epoch')
 # save train and val loss to pickle
 with open('train_val_loss.pkl', 'bw') as f:
     pkl.dump(train_val_loss_list, f)
