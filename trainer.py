@@ -81,7 +81,7 @@ del model
 model = best_model
 gold_test_list = []
 pred_test_list = []
-for X, y in val_loader:
+for X, y in test_loader:
     y_pred = model(X)
     gold_test_list.append(np.asarray(y))
     pred_test_list.append(np.asarray(y_pred))
