@@ -17,5 +17,13 @@ aclImdb
         |-- pos
         |-- neg
 ```
+## Training curve
+![Curve](img/train_curve.png)
 
-## Model
+## Result
+
+Best val loss at: 7 th epoch
+Test accuracy is: 0.842000
+
+
+
