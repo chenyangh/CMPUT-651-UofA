@@ -77,7 +77,7 @@ for epoch in tqdm(range(MAX_EPOCH)):
     gold_val_list = np.concatenate(gold_val_list)
     pred_val_list = np.concatenate(pred_val_list)
     pred_val_list[pred_val_list >= 0.5] = 1
-    pred_train_list[pred_val_list < 0.5] = 0
+    pred_val_list[pred_val_list < 0.5] = 0
     val_acc = sum(pred_val_list == gold_val_list) / len(pred_val_list)
 
     # for the training curve on loss
