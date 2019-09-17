@@ -12,7 +12,7 @@ import numpy as np
 DATA_ROOT = 'aclImdb'
 
 VOCAB_SIZE = 2000
-HALF_VAL_SIZE = 1250
+HALF_VAL_SIZE = 2500
 
 
 def get_reviews_from_path(path):
@@ -90,10 +90,10 @@ def load_imdb_text(is_train=True, is_str_clean=False, is_remove_stopwords=False)
         np.random.shuffle(pos_reviews)
         np.random.shuffle(neg_reviews)
         # get HALF_VAL_SIZE from pos and neg respectively to build val set
-        val_pos = pos_reviews[:HALF_VAL_SIZE]
-        train_pos = pos_reviews[HALF_VAL_SIZE:]
-        val_neg = neg_reviews[:HALF_VAL_SIZE]
-        train_neg = neg_reviews[HALF_VAL_SIZE:]
+        val_pos = pos_reviews[-HALF_VAL_SIZE:]
+        train_pos = pos_reviews[: -HALF_VAL_SIZE]
+        val_neg = neg_reviews[-HALF_VAL_SIZE:]
+        train_neg = neg_reviews[: -HALF_VAL_SIZE]
 
         # build train text
         X_train_text = train_pos + train_neg
@@ -108,6 +108,8 @@ def load_imdb_text(is_train=True, is_str_clean=False, is_remove_stopwords=False)
         # build val text
         X_val_text = val_pos + val_neg
         y_val = [1] * len(val_pos) + [0] * len(val_neg)
+
+        print(f'Train size is {len(X_train_text)}, Val size is {len(X_val_text)}')
 
         return X_train_text, y_train, X_val_text, y_val
     else:
