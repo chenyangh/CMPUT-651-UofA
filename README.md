@@ -31,9 +31,9 @@ aclImdb
 
 ## Result
 
-Best val loss at: 7 th epoch
+Best model at: 5 th epoch, given val set
 
-Test accuracy is: 0.842000
+Test accuracy is: 0.843200
 
 
 

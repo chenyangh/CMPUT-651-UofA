@@ -40,9 +40,10 @@ train_loader = DataLoader(X_train, y_train,  bs=BATCH_SIZE)
 val_loader = DataLoader(X_val, y_val, bs=BATCH_SIZE)
 test_loader = DataLoader(X_val, y_val, bs=BATCH_SIZE)
 
-
+is_criterion_best_val_loss = False
 best_model = None
 best_val_loss = 9999
+best_val_acc = 0
 train_val_loss_list = []
 train_val_acc_list = []
 best_epoch_num = None
@@ -84,14 +85,23 @@ for epoch in tqdm(range(MAX_EPOCH)):
     train_val_loss_list.append((train_loss/len(train_loader), val_loss/len(val_loader)))
     train_val_acc_list.append((train_acc, val_acc))
 
-    if val_loss < best_val_loss:
-        best_val_loss = val_loss
-        best_epoch_num = epoch + 1
-        if best_model is not None:  # collect garbage
-            del best_model
-        best_model = deepcopy(model)
+    if is_criterion_best_val_loss:
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_epoch_num = epoch + 1
+            if best_model is not None:  # collect garbage
+                del best_model
+            best_model = deepcopy(model)
+    else:
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            best_epoch_num = epoch + 1
+            if best_model is not None:  # collect garbage
+                del best_model
+            best_model = deepcopy(model)
 
-print(f'Best val loss at: {best_epoch_num:d} th epoch')
+
+print(f'Best model at: {best_epoch_num:d} th epoch, given val set')
 # save train and val loss to pickle
 with open('train_val_loss.pkl', 'bw') as f:
     pkl.dump(train_val_loss_list, f)
