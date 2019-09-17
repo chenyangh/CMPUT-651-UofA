@@ -31,9 +31,8 @@ aclImdb
 
 ## Result
 
-Best model at: 5 th epoch, given val set
+Best model at: 12 th epoch, given val set
 
-Test accuracy is: 0.843200
-
+Test accuracy is: 0.851000
 
 
