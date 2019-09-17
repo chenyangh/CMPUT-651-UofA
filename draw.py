@@ -27,7 +27,7 @@ x = [x + 1 for x in list(range(len(train_val_loss_list)))]
 
 plt.plot(x, train_acc_list, 'r', label='Train')
 plt.plot(x, val_acc_list, 'b', label='Val')
-plt.ylabel('Loss')
-plt.xlabel('Accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
 plt.legend()
 plt.savefig('img/train_curve_acc.png')
