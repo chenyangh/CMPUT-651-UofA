@@ -8,6 +8,7 @@ Parameter initialization: Uniform[-0.5, 0.5]
 import numpy as np
 from copy import deepcopy
 
+
 class TwoLayerNN:
     def __init__(self, input_dim=2000, lr=0.1, hidden_dim=200):
         self.input_dim = input_dim
@@ -17,47 +18,40 @@ class TwoLayerNN:
         self.b2 = np.asarray(np.random.uniform(-0.5, 0.5))
         self.lr = lr
 
-    def forward(self, data):
+    def forward(self, X):
         """
         :param data: data.size() = BS * DIM
         :return: BS * 1
         """
-        z_list = [self.sigmoid(np.matmul(x, self.W1) + self.b1) for x in data]
-        output = [self.sigmoid(np.matmul(z, self.W2) + self.b2) for z in z_list]
-        return output
+        # z1 = W1 * X + b1
+        # p1 = sigmoid(z1)
+        # z2 = W2 * p1 + b2
+        # p2 = sigmoid(z2)
+        z1 = [np.matmul(x, self.W1) + self.b1 for x in X]
+        p1 = [self.sigmoid(z) for z in z1]
+        z2 = [np.matmul(p, self.W2) + self.b2 for p in p1]
+        p2 = [self.sigmoid(z) for z in z2]
+
+        cached = {'z1': z1,
+                  'p1': p1,
+                  'z2': z2,
+                  'p2': p2}
+        return p2, cached
 
     @staticmethod
     def sigmoid(x):
         return 1 / (1 + np.e ** -x)
 
+    @staticmethod
+    def d_sigmoid(x):
+        return np.dot((1 - x), x)
+
     def __call__(self, data):
         return self.forward(data)
 
-    def gradient_decent_step(self, X, y, y_pred):
+    def gradient_decent_step(self, X, y, y_pred, cached):
         y = np.asarray(y)
         y_pred = np.asarray(y_pred)
-        # W2
-        old_W2 = deepcopy(self.W2)
-        gradient = np.zeros(self.W2.shape[0])
-        l1_out = [self.sigmoid(np.matmul(x, self.W1) + self.b1) for x in X]
-        for x, delta in zip(l1_out, y_pred.reshape(-1) - y):
-            gradient += np.dot(x, delta)
-        gradient /= len(y)
-        self.W2 -= self.lr * gradient
 
-        # b2
-        old_b2 = deepcopy(self.b2)
-        gradient = np.mean(y_pred - y)
-        self.b2 -= self.lr * gradient
-
-        # W1
-        gradient = np.zeros(self.W1.shape[0])
-        for x, delta in zip(X, self.W2 - old_W2):
-            gradient += np.dot(x, delta)
-        self.W1 -= self.lr * gradient
-
-        # b1
-        gradient = np.mean(self.b2 - old_b2)
-        self.b1 -= self.lr * gradient
 
 

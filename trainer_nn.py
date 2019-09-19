@@ -48,9 +48,9 @@ best_epoch_num = None
 for epoch in tqdm(range(MAX_EPOCH)):
     train_loss = 0
     for X, y in train_loader:
-        y_pred = model(X)
+        y_pred, cached = model(X)
         loss = loss_criterion(y, y_pred)
-        model.gradient_decent_step(X, y, y_pred)
+        model.gradient_decent_step(X, y, y_pred, cached)
         train_loss += loss
     # print(f'Training loss is {train_loss/len(train_loader)}')
 
