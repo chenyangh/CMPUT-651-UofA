@@ -32,11 +32,11 @@ class TwoLayerNN:
         z2 = [np.matmul(p, self.W2) + self.b2 for p in p1]
         p2 = [self.sigmoid(z) for z in z2]
 
-        cached = {'z1': z1,
-                  'p1': p1,
-                  'z2': z2,
-                  'p2': p2}
-        return p2, cached
+        cached = {'z1': np.asarray(z1),
+                  'p1': np.asarray(p1),
+                  'z2': np.asarray(z2),
+                  'p2': np.asarray(p2)}
+        return np.asarray(p2), cached
 
     @staticmethod
     def sigmoid(x):
@@ -44,14 +44,37 @@ class TwoLayerNN:
 
     @staticmethod
     def d_sigmoid(x):
-        return np.dot((1 - x), x)
+        return np.multiply((1 - x), x)
 
     def __call__(self, data):
         return self.forward(data)
 
-    def gradient_decent_step(self, X, y, y_pred, cached):
-        y = np.asarray(y)
-        y_pred = np.asarray(y_pred)
+    def gradient_decent_step(self, X_batch, y_batch, y_hat_batch, cached):
+        # dJdp2 = - y / p2 + (1 - y) / (1 - p2)
+        dJdp2 = - np.divide(y_batch, cached['p2']) + np.divide((1 - y_batch), (1 - cached['p2']))
+        dp2dz2 = self.d_sigmoid(cached['z2'])
+        dJdz2 = np.multiply(dJdp2, dp2dz2)
+        dz2dw2 = cached['p1']
+        dJdw2 = np.divide(dJdz2, dz2dw2)  # FIXME
+        dJb2 = dJdz2
+        dz2dp1 = self.W2
+        dJdp1 = np.multiply(dJdz2, dz2dp1)  # FIXME
+        dp1dz1 = self.d_sigmoid(cached['z1'])
+        dJdz1 = np.multiply(dJdp1, dp1dz1)
+        dz1dw1 = X_batch
+        dJdw1 = np.multiply(dJdz1, dz1dw1)
+        dJb1 = dJdz1
+
+
+        # update parameters
+        self.W1 -= self.lr * dJdw1
+        self.b1 -= self.lr * dJb1
+        self.W2 -= self.lr * dJdw2
+        self.b2 -= self.lr * dJb2
+
+
+
+
 
 
 

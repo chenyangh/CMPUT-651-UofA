@@ -2,6 +2,7 @@
 Simple data loader,
 By Chenyang Sept, 2019
 """
+import numpy as np
 
 
 class DataLoader:
@@ -36,4 +37,5 @@ class DataLoader:
 
     def _next_batch(self):
         next_index_list = self._next_index()
-        return [self.X[i] for i in next_index_list], [self.y[i] for i in next_index_list]
+        return np.asarray([self.X[i] for i in next_index_list]), \
+               np.asarray([self.y[i] for i in next_index_list])
