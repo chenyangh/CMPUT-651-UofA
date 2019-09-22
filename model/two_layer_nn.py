@@ -65,6 +65,7 @@ class TwoLayerNN:
         dJdw1 = np.multiply(dJdz1, dz1dw1)
         dJb1 = dJdz1
 
+
         # update parameters
         self.W1 -= self.lr * dJdw1
         self.b1 -= self.lr * dJb1
