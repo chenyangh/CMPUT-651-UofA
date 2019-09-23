@@ -60,7 +60,8 @@ class TwoLayerNN:
         dJdz2 = np.multiply(dJdp2, dp2dz2)  # bs * output_dim
         dz2dw2 = cached['p1']  # bs * hidden_dim
         # dJdw2 = dJdz2 * dz2dw2
-        dJdw2 = np.multiply(np.tile(dJdz2, (200, 1)).T, dz2dw2)  # bs * hidden_dim * output_dim
+        # dJdw2 = np.multiply(np.tile(dJdz2, (200, 1)).T, dz2dw2)  # bs * hidden_dim * output_dim
+        dJdw2 = np.multiply(dz2dw2.reshape(-1, 200), dJdz2.reshape(-1, 1))  # bs * hidden_dim * output_dim
         dJdb2 = dJdz2  # bs * output_dim
         # Back-propagate hiddent layer
         dz2dp1 = self.W2  # bs * hidden_dim
