@@ -50,7 +50,7 @@ for epoch in tqdm(range(MAX_EPOCH)):
     for X, y in train_loader:
         y_pred, cached = model(X)
         loss = loss_criterion(y, y_pred)
-        model.gradient_decent_step(X, y, y_pred, cached)
+        model.gradient_decent_step(X, y, cached)
         train_loss += loss
     # print(f'Training loss is {train_loss/len(train_loader)}')
 
