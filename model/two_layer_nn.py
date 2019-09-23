@@ -42,36 +42,41 @@ class TwoLayerNN:
     def sigmoid(x):
         return 1 / (1 + np.e ** -x)
 
-    @staticmethod
-    def d_sigmoid(x):
-        return np.multiply((1 - x), x)
+    def d_sigmoid(self, x):
+        return np.multiply((1 - self.sigmoid(x)), self.sigmoid(x))
 
     def __call__(self, data):
         return self.forward(data)
 
-    def gradient_decent_step(self, X_batch, y_batch, cached):
-        bs = X_batch.shape[0]  # batch size
+    def gradient_decent_step(self, X, y, cached):
+        # X: bs * input_dim
+        # y: bs
+        bs = X.shape[0]  # get batch size
+        # following the notation in forward propagation, y_hat is p2
+        # Back-propagate output layer
         # dJdp2 = - y / p2 + (1 - y) / (1 - p2)
-        dJdp2 = - np.divide(y_batch, cached['p2']) + np.divide((1 - y_batch), (1 - cached['p2']))
-        dp2dz2 = self.d_sigmoid(cached['z2'])
-        dJdz2 = np.dot(dJdp2, dp2dz2)
-        dz2dw2 = cached['p1']
+        dJdp2 = - np.divide(y, cached['p2']) + np.divide((1 - y), (1 - cached['p2']))  # bs * output_dim
+        dp2dz2 = self.d_sigmoid(cached['z2'])  # bs * output_dim
+        dJdz2 = np.multiply(dJdp2, dp2dz2)  # bs * output_dim
+        dz2dw2 = cached['p1']  # bs * hidden_dim
         # dJdw2 = dJdz2 * dz2dw2
-        dJdw2 = np.matmul(np.tile(dJdz2, (1, bs)), dz2dw2).reshape(-1)
-        dJb2 = dJdz2
-        dz2dp1 = self.W2
-        dJdp1 = np.dot(dJdz2, dz2dp1)
-        dp1dz1 = self.d_sigmoid(cached['z1'])
-        dJdz1 = np.sum(np.asarray([np.multiply(dJdp1, dp1dz1_i) for dp1dz1_i in dp1dz1]), axis=0)
-        dz1dw1 = X_batch
-        dJdw1 = np.matmul(np.tile(dJdz1, (bs, 1)).T, dz1dw1).T
-        dJb1 = dJdz1
+        dJdw2 = np.multiply(np.tile(dJdz2, (200, 1)).T, dz2dw2)  # bs * hidden_dim * output_dim
+        dJdb2 = dJdz2  # bs * output_dim
+        # Back-propagate hiddent layer
+        dz2dp1 = self.W2  # bs * hidden_dim
+        dJdp1 = dJdz2.reshape(-1, 1) * np.tile(dz2dp1, (bs, 1))  # bs * hidden_dim
+        dp1dz1 = self.d_sigmoid(cached['z1'])  # bs * hidden_dim
+        dJdz1 = np.multiply(dJdp1, dp1dz1)  # bs * hidden_dim
+        dz1dw1 = X  # bs * input_dim
+        dJdw1 = np.multiply(dz1dw1.reshape(-1, 2000, 1), dJdz1.reshape(-1, 1, 200))  # bs * input_dim * hidden_dim
+        dJdb1 = dJdz1  # bs * hidden_dim
 
         # update parameters
-        self.W2 -= self.lr * dJdw2 / bs
-        self.b2 -= self.lr * dJb2 / bs
-        self.W1 -= self.lr * dJdw1 / bs
-        self.b1 -= self.lr * dJb1 / bs
+        self.W2 -= self.lr * np.mean(dJdw2, axis=0)
+        self.b2 -= self.lr * np.mean(dJdb2, axis=0)
+        self.W1 -= self.lr * np.mean(dJdw1, axis=0)
+        self.b1 -= self.lr * np.mean(dJdb1, axis=0)
+
 
 
 

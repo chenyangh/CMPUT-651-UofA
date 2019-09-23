@@ -27,7 +27,7 @@ import numpy as np
 from tqdm import tqdm
 
 MAX_EPOCH = 300
-LEARNING_RATE = 0.1
+LEARNING_RATE = 0.01
 BATCH_SIZE = 20
 
 with open('imdb_data.pkl', 'br') as f:
@@ -52,14 +52,14 @@ for epoch in tqdm(range(MAX_EPOCH)):
         loss = loss_criterion(y, y_pred)
         model.gradient_decent_step(X, y, cached)
         train_loss += loss
-    # print(f'Training loss is {train_loss/len(train_loader)}')
+    print(f'Training loss is {train_loss/len(train_loader)}')
 
     val_loss = 0
     for X, y in val_loader:
-        y_pred = model(X)
+        y_pred, _ = model(X)
         loss = loss_criterion(y, y_pred)
         val_loss += loss
-    # print(f'Validation loss is {val_loss/len(val_loader)}')
+    print(f'Validation loss is {val_loss/len(val_loader)}')
 
     # for the training curve
     train_val_loss_list.append((train_loss/len(train_loader), val_loss/len(val_loader)))
@@ -82,7 +82,7 @@ model = best_model
 gold_test_list = []
 pred_test_list = []
 for X, y in val_loader:
-    y_pred = model(X)
+    y_pred, _ = model(X)
     gold_test_list.append(np.asarray(y))
     pred_test_list.append(np.asarray(y_pred))
 
