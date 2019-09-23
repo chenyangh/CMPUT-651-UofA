@@ -10,13 +10,6 @@ class CrossEntropyLoss:
     def __init__(self, reduce=True):
         self.reduce = reduce
 
-    @staticmethod
-    def single_ce(gold, pred):
-        if gold == 1:
-            return - np.log(pred)
-        else:
-            return - np.log(1 - pred)
-
     def __call__(self, y_gold, y_pred):
 
         loss = - np.sum([y_i * np.log(y_hat_i) + (1 - y_i) * np.log(1 - y_hat_i)
