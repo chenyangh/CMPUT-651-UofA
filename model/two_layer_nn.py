@@ -62,16 +62,16 @@ class TwoLayerNN:
         dz2dw2 = cached['p1']  # bs * hidden_dim
         # dJdw2 = dJdz2 * dz2dw2
         # dJdw2 = np.multiply(np.tile(dJdz2, (200, 1)).T, dz2dw2)  # bs * hidden_dim * output_dim
-        dJdw2 = np.matmul(dz2dw2.T, dJdz2)  # bs * hidden_dim * output_dim
-        dJdb2 = np.matmul(dJdz2.T, np.ones((bs, 1)))  # bs * output_dim
+        dJdw2 = np.matmul(dz2dw2.T, dJdz2)  # hidden_dim * output_dim
+        dJdb2 = np.matmul(dJdz2.T, np.ones((bs, 1)))  # output_dim
         # Back-propagate hiddent layer
         dz2dp1 = self.W2  # bs * hidden_dim
-        dJdp1 = dJdz2.reshape(-1, 1) * np.tile(dz2dp1, (bs, 1))  # bs * hidden_dim
+        dJdp1 = np.matmul(dJdz2.reshape(-1, 1), dz2dp1.reshape(1, -1))  # bs * hidden_dim
         dp1dz1 = self.d_sigmoid(cached['z1'])  # bs * hidden_dim
         dJdz1 = np.multiply(dJdp1, dp1dz1)  # bs * hidden_dim
         dz1dw1 = X  # bs * input_dim
-        dJdw1 = np.matmul(dz1dw1.T, dJdz1)  # bs * input_dim * hidden_dim
-        dJdb1 = np.matmul(dJdz1.T, np.ones((bs, 1)))  # bs * hidden_dim
+        dJdw1 = np.matmul(dz1dw1.T, dJdz1)  # input_dim * hidden_dim
+        dJdb1 = np.matmul(dJdz1.T, np.ones((bs, 1)))  # hidden_dim
 
         # update parameters
         self.W2 -= self.lr * dJdw2 / bs
