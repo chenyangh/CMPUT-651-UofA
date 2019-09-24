@@ -59,7 +59,7 @@ for epoch in tqdm(range(MAX_EPOCH)):
         gold_train_list.append(y)
         pred_train_list.append(y_pred)
         train_loss += loss
-    # print(f'Training loss is {train_loss/len(train_loader)}')
+    print(f'Training loss is {train_loss/len(train_loader)}')
     gold_train_list = np.concatenate(gold_train_list)
     pred_train_list = np.concatenate(pred_train_list)
     pred_train_list[pred_train_list >= 0.5] = 1
@@ -75,7 +75,7 @@ for epoch in tqdm(range(MAX_EPOCH)):
         val_loss += loss
         gold_val_list.append(y)
         pred_val_list.append(y_pred)
-    # print(f'Validation loss is {val_loss/len(val_loader)}')
+    print(f'Validation loss is {val_loss/len(val_loader)}')
 
     gold_val_list = np.concatenate(gold_val_list)
     pred_val_list = np.concatenate(pred_val_list)
