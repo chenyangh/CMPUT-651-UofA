@@ -12,7 +12,9 @@ class CrossEntropyLoss:
 
     def __call__(self, y_gold, y_pred):
 
-        loss = - np.sum([y_i * np.log(y_hat_i) + (1 - y_i) * np.log(1 - y_hat_i)
+        loss = - np.sum([y_i * np.log(y_hat_i) + (1 - y_i) * np.log(1 - y_hat_i,
+                                                                    out=np.zeros_like(1 - y_hat_i, dtype=np.float),
+                                                                    where=(1 - y_hat_i) != 0)
                          for y_i, y_hat_i in zip(y_gold, y_pred)])
 
         if self.reduce:

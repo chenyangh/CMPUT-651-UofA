@@ -56,7 +56,11 @@ class TwoLayerNN:
         # following the notation in forward propagation, y_hat is p2
         # Back-propagate output layer
         # dJdp2 = - y / p2 + (1 - y) / (1 - p2)
-        dJdp2 = - np.divide(y, cached['p2']) + np.divide((1 - y), (1 - cached['p2']))  # bs * output_dim
+        # dJdp2 = - np.divide(y, cached['p2']) + np.divide((1 - y), (1 - cached['p2']))  # bs * output_dim
+        # fix divided by 0
+        dJdp2 = - np.divide(y, cached['p2']) + np.divide((1 - y), (1 - cached['p2']),
+                                                         out=np.zeros_like(1 - y, dtype=np.float),
+                                                         where=(1 - cached['p2']) != 0)  # bs * output_dim
         dp2dz2 = self.d_sigmoid(cached['z2'])  # bs * output_dim
         dJdz2 = np.multiply(dJdp2, dp2dz2)  # bs * output_dim
         dz2dw2 = cached['p1']  # bs * hidden_dim
