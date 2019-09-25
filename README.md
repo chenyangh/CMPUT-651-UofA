@@ -31,7 +31,7 @@ aclImdb
 ### Learning curve Acc
 ![Curve](img/train_curve_acc.png)
 
-## Result
+### Result
 
 Best model at: 12 th epoch, given val set
 
@@ -45,7 +45,7 @@ Test accuracy is: 0.851000
 ### Learning curve Acc
 ![Curve](img/train_curve_acc_nn.png)
 
-## Result
+###  Result
 
 Best model at: 13 th epoch, given val set
 
