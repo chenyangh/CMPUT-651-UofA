@@ -107,10 +107,10 @@ best_val_criterion_name = 'accuracy' if not is_criterion_best_val_loss else 'los
 print(f'Best model at: {best_epoch_num:d} th epoch, given the best {best_val_criterion_name} of val set')
 
 # save train and val loss to pickle
-with open('train_val_loss.pkl', 'bw') as f:
+with open('train_val_loss_nn.pkl', 'bw') as f:
     pkl.dump(train_val_loss_list, f)
 
-with open('train_val_acc.pkl', 'bw') as f:
+with open('train_val_acc_nn.pkl', 'bw') as f:
     pkl.dump(train_val_acc_list, f)
 
 # testing
